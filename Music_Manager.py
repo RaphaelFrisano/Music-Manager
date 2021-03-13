@@ -39,12 +39,12 @@ ClassicVibesPlaylist = "31159C1hoG2ZqZxtTLvBk2"
 EasyVibesPlaylist = "7Gq1sXY7RZ3LSKm86bPn7v"
 RockyVibesPlaylist = "67sSpThGjgTPiRnZ1S8GIW"
 VibeCheckPlaylist = "4GtrzqGPZdCKA29WQWlRdJ"
-DanceVibes = None
-HopPopVibes = None
-ClassicVibes = None
-EasyVibes = None
-RockyVibes = None
-VibeCheck = None
+DanceVibes = []
+HopPopVibes = []
+ClassicVibes = []
+EasyVibes = []
+RockyVibes = []
+VibeCheck = []
 Songnum = 0
 SongnumEnd = 999
 
@@ -55,19 +55,33 @@ while Songnum < SongnumEnd:
     ParentGenres = "Cell from Excel"
     genres = ParentGenres.split(",")
     for genre in genres:
-        if genre -like "Dance/Electronic":
-            DanceVibes += favouritesTracks[Songnum]
-        elif genre -like "Pop" or genre -like "HipHop"
-            HopPopVibes += favouritesTracks[Songnum]
-        elif genre -like "Classical":
-            ClassicVibes += favouritesTracks[Songnum]
-        elif genre -like "Easy Listening":
-            EasyVibes += favouritesTracks[Songnum]
-        elif genre -like "Rock" or genre -like "Metal": 
-            RockyVibes += favouritesTracks[Songnum]
-        else
-            VibeCheck += favouritesTracks[Songnum]
+        if genre in "Dance/Electronic":
+            DanceVibes += favouritesTracks[Songnum]["track"]
 
+        elif genre in "Pop" or genre in "HipHop":
+            HopPopVibes += favouritesTracks[Songnum]["track"]
+
+        elif genre in "Classical":
+            ClassicVibes += favouritesTracks[Songnum]["track"]
+
+        elif genre in "Easy Listening":
+            EasyVibes += favouritesTracks[Songnum]["track"]
+
+        elif genre in "Rock" or genre in "Metal":
+            RockyVibes += favouritesTracks[Songnum]["track"]
+        
+        else:
+            VibeCheck += favouritesTracks[Songnum]["track"]
+    
+playlist_add_items("47wDz8QxSAsDOLB8c8HdCd", DanceVibes, position=None)
+playlist_add_items("tT9IzMkySrGHwNmhBBnB5w", HopPopVibes, position=None)
+playlist_add_items("31159C1hoG2ZqZxtTLvBk2", ClassicVibes, position=None)
+playlist_add_items("7Gq1sXY7RZ3LSKm86bPn7v", EasyVibes, position=None)
+playlist_add_items("67sSpThGjgTPiRnZ1S8GIW", RockyVibes, position=None)
+playlist_add_items("4GtrzqGPZdCKA29WQWlRdJ", VibeCheck, position=None)
+
+
+'''
 #Connect to playlist
 trackslist = sp.current_user_saved_tracks(limit=50, offset=0)
 
@@ -104,3 +118,4 @@ while(offsetvar <= trackslist['total']):
     xlx.cell(row = row, column = 3).value = str(time.asctime())
 
     row = row + 1
+'''
