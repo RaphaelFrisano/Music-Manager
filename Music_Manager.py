@@ -6,7 +6,7 @@ from openpyxl import Workbook
 import spotipy
 from spotipy import util
 from spotipy.oauth2 import SpotifyClientCredentials
-
+from spotipy.oauth2 import SpotifyOAuth
 
 def get_playlist_tracks(sp, username, playlist_id):
     results = sp.user_playlist_tracks(username,playlist_id)
@@ -16,14 +16,17 @@ def get_playlist_tracks(sp, username, playlist_id):
         tracks.extend(results['items'])
     return tracks
 
-#Set up Spotify Connection 
-client_id = 'd5ec1915e2b3452f87cd1f224551a935'
-client_secret = '3e49c81210a34b4ea9ebdf90154b5df8'
+#Set up Spotify Connection
+client_id = '4b3eebc429cd462c9820a2e20fd89ef5'
+f = open("secret.txt", "r")
+client_secret = str(f.read())
 username = '16r49f73ryoeuabwxqwgpimzs'
-scope = 'user-library-read playlist-modify-public playlist-read-private'
+scope = 'user-library-read user-library-modify playlist-modify-public playlist-modify-private'
 redirect_uri='http://localhost:8888/callback'
 client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
-sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+#sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+auth_manager = SpotifyOAuth(client_id=client_id, client_secret=client_secret, scope=scope, redirect_uri=redirect_uri)
+sp = spotipy.Spotify(auth_manager=auth_manager)
 token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
 if token:
     sp = spotipy.Spotify(auth=token)
@@ -46,39 +49,39 @@ EasyVibes = []
 RockyVibes = []
 VibeCheck = []
 Songnum = 0
-SongnumEnd = 999
+SongnumEnd = (len(favouritesTracks) - 1)
 
 
 # Manage Music into Playlists
 while Songnum < SongnumEnd:
     Songnum = Songnum + 1
-    ParentGenres = "Cell from Excel"
+    ParentGenres = "Dance/Electronic"
     genres = ParentGenres.split(",")
     for genre in genres:
         if genre in "Dance/Electronic":
-            DanceVibes += favouritesTracks[Songnum]["track"]
+            DanceVibes.append(favouritesTracks[Songnum]["track"]["id"])
 
         elif genre in "Pop" or genre in "HipHop":
-            HopPopVibes += favouritesTracks[Songnum]["track"]
+            HopPopVibes.append(favouritesTracks[Songnum]["track"]["id"])
 
         elif genre in "Classical":
-            ClassicVibes += favouritesTracks[Songnum]["track"]
+            ClassicVibes.append(favouritesTracks[Songnum]["track"]["id"])
 
         elif genre in "Easy Listening":
-            EasyVibes += favouritesTracks[Songnum]["track"]
+            EasyVibes.append(favouritesTracks[Songnum]["track"]["id"])
 
         elif genre in "Rock" or genre in "Metal":
-            RockyVibes += favouritesTracks[Songnum]["track"]
+            RockyVibes.append(favouritesTracks[Songnum]["track"]["id"])
         
         else:
-            VibeCheck += favouritesTracks[Songnum]["track"]
+            VibeCheck.append(favouritesTracks[Songnum]["track"]["id"])
     
-playlist_add_items("47wDz8QxSAsDOLB8c8HdCd", DanceVibes, position=None)
-playlist_add_items("tT9IzMkySrGHwNmhBBnB5w", HopPopVibes, position=None)
-playlist_add_items("31159C1hoG2ZqZxtTLvBk2", ClassicVibes, position=None)
-playlist_add_items("7Gq1sXY7RZ3LSKm86bPn7v", EasyVibes, position=None)
-playlist_add_items("67sSpThGjgTPiRnZ1S8GIW", RockyVibes, position=None)
-playlist_add_items("4GtrzqGPZdCKA29WQWlRdJ", VibeCheck, position=None)
+sp.playlist_add_items("47wDz8QxSAsDOLB8c8HdCd", DanceVibes)
+sp.playlist_add_items("tT9IzMkySrGHwNmhBBnB5w", HopPopVibes)
+sp.playlist_add_items("31159C1hoG2ZqZxtTLvBk2", ClassicVibes)
+sp.playlist_add_items("7Gq1sXY7RZ3LSKm86bPn7v", EasyVibes)
+sp.playlist_add_items("67sSpThGjgTPiRnZ1S8GIW", RockyVibes)
+sp.playlist_add_items("4GtrzqGPZdCKA29WQWlRdJ", VibeCheck)
 
 
 '''
